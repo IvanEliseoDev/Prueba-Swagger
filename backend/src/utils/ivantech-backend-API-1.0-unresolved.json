@@ -1,0 +1,3123 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "backend-api-ivan",
+    "description" : "Documentación generada automáticamente a partir del código. Rutas montadas en /api."
+  },
+  "paths" : {
+    "/ping" : {
+      "get" : {
+        "summary" : "Health check",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "status" : {
+                      "type" : "string",
+                      "example" : "OK"
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Pong"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register/request-code" : {
+      "post" : {
+        "summary" : "Request registration verification code",
+        "tags" : [ "Auth" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "email" : {
+                    "type" : "string",
+                    "format" : "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Code sent (or generic confirmation)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request (missing email / already registered)"
+          }
+        }
+      }
+    },
+    "/api/auth/register/verify" : {
+      "post" : {
+        "summary" : "Verify code and register user",
+        "tags" : [ "Auth" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "code", "password" ],
+                "properties" : {
+                  "email" : {
+                    "type" : "string"
+                  },
+                  "code" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  },
+                  "role" : {
+                    "type" : "string",
+                    "enum" : [ "user", "admin", "seller" ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "User created with token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    },
+                    "token" : {
+                      "type" : "string"
+                    },
+                    "user" : {
+                      "$ref" : "#/components/schemas/UserSummary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login" : {
+      "post" : {
+        "summary" : "Login with email and password",
+        "tags" : [ "Auth" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "password" ],
+                "properties" : {
+                  "email" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Login successful",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    },
+                    "token" : {
+                      "type" : "string"
+                    },
+                    "user" : {
+                      "$ref" : "#/components/schemas/UserSummary"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/api/auth/password-reset/request" : {
+      "post" : {
+        "summary" : "Request password reset code",
+        "tags" : [ "Auth" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "email" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Confirmation (generic response)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/password-reset/verify" : {
+      "post" : {
+        "summary" : "Verify code and reset password",
+        "tags" : [ "Auth" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "code", "newPassword" ],
+                "properties" : {
+                  "email" : {
+                    "type" : "string"
+                  },
+                  "code" : {
+                    "type" : "string"
+                  },
+                  "newPassword" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Password reset successful",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid code or missing fields"
+          }
+        }
+      }
+    },
+    "/api/auth/me" : {
+      "get" : {
+        "summary" : "Get current user",
+        "tags" : [ "Auth" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "apiKey",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "security" : [ {
+          "apiKey_1" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Current user",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "user" : {
+                      "$ref" : "#/components/schemas/UserProfile"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized / missing token"
+          }
+        }
+      }
+    },
+    "/api/announcement-bar/active" : {
+      "get" : {
+        "summary" : "Get active announcement bar (public)",
+        "tags" : [ "AnnouncementBar" ],
+        "responses" : {
+          "200" : {
+            "description" : "Active announcement or null",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "anyOf" : [ {
+                    "$ref" : "#/components/schemas/AnnouncementBar"
+                  }, {
+                    "type" : "null"
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/announcement-bar" : {
+      "get" : {
+        "summary" : "Get all announcement bars (admin)",
+        "tags" : [ "AnnouncementBar" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "apiKey",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "security" : [ {
+          "apiKey_1" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of announcement bars",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/AnnouncementBar"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create announcement bar (admin)",
+        "tags" : [ "AnnouncementBar" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ ],
+                "properties" : {
+                  "text" : {
+                    "type" : "string"
+                  },
+                  "imageUrl" : {
+                    "type" : "string"
+                  },
+                  "imagePublicId" : {
+                    "type" : "string"
+                  },
+                  "active" : {
+                    "type" : "boolean"
+                  },
+                  "backgroundColor" : {
+                    "type" : "string"
+                  },
+                  "textColor" : {
+                    "type" : "string"
+                  },
+                  "animation" : {
+                    "type" : "string"
+                  },
+                  "decoration" : {
+                    "type" : "string"
+                  },
+                  "height" : {
+                    "type" : "number"
+                  },
+                  "fontSize" : {
+                    "type" : "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created announcement",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AnnouncementBar"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Validation error"
+          }
+        }
+      }
+    },
+    "/api/announcement-bar/{id}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "id",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "put" : {
+        "summary" : "Update announcement bar (admin)",
+        "tags" : [ "AnnouncementBar" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AnnouncementBarUpdate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated announcement",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AnnouncementBar"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete announcement bar (admin)",
+        "tags" : [ "AnnouncementBar" ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted confirmation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/banners" : {
+      "get" : {
+        "summary" : "Get banners",
+        "tags" : [ "Banner" ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of banners",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Banner"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create banner (admin)",
+        "tags" : [ "Banner" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BannerCreate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created banner",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Banner"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Validation error"
+          }
+        }
+      }
+    },
+    "/api/banners/reorder" : {
+      "put" : {
+        "summary" : "Reorder banners (admin)",
+        "tags" : [ "Banner" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "items" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "object",
+                      "properties" : {
+                        "_id" : {
+                          "type" : "string"
+                        },
+                        "order" : {
+                          "type" : "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Reorder result",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/banners/{id}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "id",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "put" : {
+        "summary" : "Update banner (admin)",
+        "tags" : [ "Banner" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BannerCreate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated banner",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Banner"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete banner (admin)",
+        "tags" : [ "Banner" ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted confirmation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/barcodes" : {
+      "post" : {
+        "summary" : "Generate unique barcode",
+        "tags" : [ "Barcode" ],
+        "responses" : {
+          "201" : {
+            "description" : "Generated barcode",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "barcode" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/categories" : {
+      "get" : {
+        "summary" : "Get categories",
+        "tags" : [ "Category" ],
+        "responses" : {
+          "200" : {
+            "description" : "List of categories",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create category (admin)",
+        "tags" : [ "Category" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "name" ],
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  },
+                  "icon" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created category",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Validation error / duplicate"
+          }
+        }
+      }
+    },
+    "/api/categories/{id}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "id",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "get" : {
+        "summary" : "Get category by id",
+        "tags" : [ "Category" ],
+        "responses" : {
+          "200" : {
+            "description" : "Category object",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update category (admin)",
+        "tags" : [ "Category" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  },
+                  "featured" : {
+                    "type" : "boolean"
+                  },
+                  "order" : {
+                    "type" : "number"
+                  },
+                  "icon" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated category",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete category (admin)",
+        "tags" : [ "Category" ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted confirmation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/categories/{id}/subcategories" : {
+      "post" : {
+        "summary" : "Add subcategory (admin)",
+        "tags" : [ "Category" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "name" ],
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "items" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Category updated with new subcategory",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/categories/{id}/subcategories/{subcategoryId}" : {
+      "put" : {
+        "summary" : "Update subcategory (admin)",
+        "tags" : [ "Category" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "subcategoryId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "items" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Category with updated subcategory",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete subcategory (admin)",
+        "tags" : [ "Category" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "subcategoryId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Subcategory deleted",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    },
+                    "category" : {
+                      "$ref" : "#/components/schemas/Category"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products" : {
+      "get" : {
+        "summary" : "Get products (search/filter)",
+        "tags" : [ "Product" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "search",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "page",
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "limit",
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of products",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create product",
+        "tags" : [ "Product" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ProductCreate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created product",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Validation error"
+          }
+        }
+      }
+    },
+    "/api/products/allProducts" : {
+      "get" : {
+        "summary" : "Get paginated & filtered products (advanced)",
+        "tags" : [ "Product" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "category",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "search",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "featured",
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "in" : "query",
+          "name" : "onSale",
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "in" : "query",
+          "name" : "page",
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "in" : "query",
+          "name" : "limit",
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Paginated products response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "products" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/Product"
+                      }
+                    },
+                    "currentPage" : {
+                      "type" : "integer"
+                    },
+                    "totalPages" : {
+                      "type" : "integer"
+                    },
+                    "totalProducts" : {
+                      "type" : "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/barcode/{barcode}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "barcode",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "put" : {
+        "summary" : "Update product by barcode",
+        "tags" : [ "Product" ],
+        "requestBody" : {
+          "required" : false,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "stock" : {
+                    "type" : "number"
+                  },
+                  "price" : {
+                    "type" : "number"
+                  },
+                  "location" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated product",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete product by barcode",
+        "tags" : [ "Product" ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted confirmation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/{productId}/variant-stock" : {
+      "put" : {
+        "summary" : "Update variant stock",
+        "tags" : [ "Product" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "productId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Provide variantId or size/color and either stockChange or newStock",
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "variantId" : {
+                    "type" : "string"
+                  },
+                  "size" : {
+                    "type" : "string"
+                  },
+                  "color" : {
+                    "type" : "string"
+                  },
+                  "stockChange" : {
+                    "type" : "integer"
+                  },
+                  "newStock" : {
+                    "type" : "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Product updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request"
+          },
+          "404" : {
+            "description" : "Product/variant not found"
+          }
+        }
+      }
+    },
+    "/api/products/{id}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "id",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "get" : {
+        "summary" : "Get product by id",
+        "tags" : [ "Product" ],
+        "responses" : {
+          "200" : {
+            "description" : "Product object",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not found"
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update product by id",
+        "tags" : [ "Product" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ProductUpdate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated product",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete product by id",
+        "tags" : [ "Product" ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted confirmation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/images/upload" : {
+      "post" : {
+        "summary" : "Upload product image (multipart/form-data)",
+        "tags" : [ "Images" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "image" : {
+                    "type" : "string",
+                    "format" : "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Uploaded image info",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "url" : {
+                      "type" : "string"
+                    },
+                    "public_id" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/images/{publicId}" : {
+      "delete" : {
+        "summary" : "Delete product image by publicId",
+        "tags" : [ "Images" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "publicId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted confirmation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/images/delete-by-url" : {
+      "post" : {
+        "summary" : "Delete image by URL",
+        "tags" : [ "Images" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "url" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Deleted confirmation"
+          }
+        }
+      }
+    },
+    "/api/images/upload-announcement" : {
+      "post" : {
+        "summary" : "Upload announcement image (multipart)",
+        "tags" : [ "Images" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "image" : {
+                    "type" : "string",
+                    "format" : "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Uploaded announcement image with DB id",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "url" : {
+                      "type" : "string"
+                    },
+                    "public_id" : {
+                      "type" : "string"
+                    },
+                    "_id" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/images/announcement-gallery" : {
+      "get" : {
+        "summary" : "Get announcement images gallery",
+        "tags" : [ "Images" ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of announcement images",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/AnnouncementImage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/images/announcement/{id}" : {
+      "delete" : {
+        "summary" : "Delete announcement image by id",
+        "tags" : [ "Images" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          }
+        }
+      }
+    },
+    "/api/notifications" : {
+      "get" : {
+        "summary" : "Get notifications",
+        "tags" : [ "Notification" ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of notifications",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Notification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "(internal) create notification - controller has helper createNotification",
+        "deprecated" : true,
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    },
+    "/api/notifications/{id}/read" : {
+      "put" : {
+        "summary" : "Mark notification as read",
+        "tags" : [ "Notification" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Updated notification",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Notification"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/{id}" : {
+      "delete" : {
+        "summary" : "Delete notification",
+        "tags" : [ "Notification" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          }
+        }
+      }
+    },
+    "/api/orders" : {
+      "get" : {
+        "summary" : "Get all orders",
+        "tags" : [ "Order" ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of orders",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create order",
+        "tags" : [ "Order" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OrderCreate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created order",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Validation or stock error"
+          }
+        }
+      }
+    },
+    "/api/orders/{id}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "id",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "get" : {
+        "summary" : "Get order by id",
+        "tags" : [ "Order" ],
+        "responses" : {
+          "200" : {
+            "description" : "Order object",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Order"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update order (status, notify)",
+        "tags" : [ "Order" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "status" : {
+                    "type" : "string",
+                    "enum" : [ "pending", "processing", "shipped", "delivered", "cancelled" ]
+                  },
+                  "notifyCustomer" : {
+                    "type" : "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated order",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Order"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/excel/export" : {
+      "get" : {
+        "summary" : "Export products to Excel",
+        "tags" : [ "Excel" ],
+        "responses" : {
+          "200" : {
+            "description" : "Excel file (binary)",
+            "content" : {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/excel/file" : {
+      "get" : {
+        "summary" : "Download last exported Excel file",
+        "tags" : [ "Excel" ],
+        "responses" : {
+          "200" : {
+            "description" : "Excel binary"
+          }
+        }
+      }
+    },
+    "/api/excel/import" : {
+      "post" : {
+        "summary" : "Import products from Excel file",
+        "tags" : [ "Excel" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "file" : {
+                    "type" : "string",
+                    "format" : "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Import results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    },
+                    "results" : {
+                      "type" : "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/geocoding/nominatim" : {
+      "get" : {
+        "summary" : "Reverse geocode using Nominatim",
+        "tags" : [ "Geocoding" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "lat",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "lon",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Nominatim response (proxied)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/closure-dates" : {
+      "get" : {
+        "summary" : "Get closure dates",
+        "tags" : [ "ClosureDate" ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of closure dates",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ClosureDate"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Add closure date (admin)",
+        "tags" : [ "ClosureDate" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ClosureDateCreate"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created closure date"
+          }
+        }
+      }
+    },
+    "/api/closure-dates/{id}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "id",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "patch" : {
+        "summary" : "Update closure date (admin)",
+        "tags" : [ "ClosureDate" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "hasSpecialHours" : {
+                    "type" : "boolean"
+                  },
+                  "specialHours" : {
+                    "type" : "object",
+                    "properties" : {
+                      "openTime" : {
+                        "type" : "string"
+                      },
+                      "closeTime" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete closure date (admin)",
+        "tags" : [ "ClosureDate" ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          }
+        }
+      }
+    },
+    "/api/fonts" : {
+      "get" : {
+        "summary" : "Get uploaded fonts",
+        "tags" : [ "Fonts" ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of fonts",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/CustomFont"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Upload font file (multipart)",
+        "tags" : [ "Fonts" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "font" : {
+                    "type" : "string",
+                    "format" : "binary"
+                  },
+                  "name" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Uploaded font"
+          }
+        }
+      }
+    },
+    "/api/fonts/{id}" : {
+      "delete" : {
+        "summary" : "Delete uploaded font by id",
+        "tags" : [ "Fonts" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Deleted"
+          }
+        }
+      }
+    },
+    "/api/store-hours" : {
+      "get" : {
+        "summary" : "Get store hours (seeded defaults if empty)",
+        "tags" : [ "StoreHours" ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of store hours",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/StoreHours"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Bulk update store hours (admin)",
+        "tags" : [ "StoreHours" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "hours" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/StoreHours"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated hours"
+          }
+        }
+      }
+    },
+    "/api/store-hours/{day}" : {
+      "put" : {
+        "summary" : "Update hours for a day (admin)",
+        "tags" : [ "StoreHours" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "day",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/StoreHours"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated store hours"
+          }
+        }
+      }
+    },
+    "/api/settings/{key}" : {
+      "get" : {
+        "summary" : "Get setting by key",
+        "tags" : [ "Settings" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "key",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Setting value",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Setting"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update or create setting",
+        "tags" : [ "Settings" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "value" : {
+                    "oneOf" : [ {
+                      "type" : "boolean"
+                    }, {
+                      "type" : "string"
+                    }, {
+                      "type" : "number"
+                    }, {
+                      "type" : "array"
+                    }, {
+                      "type" : "object"
+                    } ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Setting saved",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Setting"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/wishlist" : {
+      "get" : {
+        "summary" : "Get current user's wishlist",
+        "tags" : [ "Users" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "apiKey",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "security" : [ {
+          "apiKey_1" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Array of products",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Toggle product in wishlist (current user)",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "productId" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Operation result with wishlist",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    },
+                    "wishlist" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/profile" : {
+      "get" : {
+        "summary" : "Get current user's profile",
+        "tags" : [ "Users" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "apiKey",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "security" : [ {
+          "apiKey_1" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "User profile",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update current user's profile",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "firstName" : {
+                    "type" : "string"
+                  },
+                  "lastName" : {
+                    "type" : "string"
+                  },
+                  "phone" : {
+                    "type" : "string"
+                  },
+                  "gender" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated profile",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserProfile"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "securitySchemes" : {
+      "apiKey_1" : {
+        "name" : "apiKey",
+        "type" : "apiKey",
+        "in" : "query"
+      }
+    },
+    "schemas" : {
+      "AnnouncementBar" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "text" : {
+            "type" : "string"
+          },
+          "imageUrl" : {
+            "type" : "string"
+          },
+          "imagePublicId" : {
+            "type" : "string"
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "backgroundColor" : {
+            "type" : "string"
+          },
+          "textColor" : {
+            "type" : "string"
+          },
+          "animation" : {
+            "type" : "string"
+          },
+          "decoration" : {
+            "type" : "string"
+          },
+          "height" : {
+            "type" : "number"
+          },
+          "fontSize" : {
+            "type" : "number"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "description" : "Announcement bar object"
+      },
+      "AnnouncementBarUpdate" : {
+        "type" : "object",
+        "properties" : {
+          "text" : {
+            "type" : "string"
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "backgroundColor" : {
+            "type" : "string"
+          },
+          "textColor" : {
+            "type" : "string"
+          },
+          "animation" : {
+            "type" : "string"
+          },
+          "decoration" : {
+            "type" : "string"
+          },
+          "height" : {
+            "type" : "number"
+          },
+          "fontSize" : {
+            "type" : "number"
+          }
+        }
+      },
+      "AnnouncementImage" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "url" : {
+            "type" : "string"
+          },
+          "public_id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "Banner" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "image", "video", "collage" ]
+          },
+          "imageUrl" : {
+            "type" : "string"
+          },
+          "images" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "videoUrl" : {
+            "type" : "string"
+          },
+          "videoDuration" : {
+            "type" : "number"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "subtitle" : {
+            "type" : "string"
+          },
+          "link" : {
+            "type" : "string"
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "order" : {
+            "type" : "number"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "BannerCreate" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "enum" : [ "image", "video", "collage" ],
+            "default" : "image"
+          },
+          "imageUrl" : {
+            "type" : "string"
+          },
+          "images" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "videoUrl" : {
+            "type" : "string"
+          },
+          "videoDuration" : {
+            "type" : "number"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "subtitle" : {
+            "type" : "string"
+          },
+          "link" : {
+            "type" : "string"
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "order" : {
+            "type" : "number"
+          }
+        }
+      },
+      "BarcodeResponse" : {
+        "type" : "object",
+        "properties" : {
+          "barcode" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Category" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "slug" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "subcategories" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "_id" : {
+                  "type" : "string"
+                },
+                "name" : {
+                  "type" : "string"
+                },
+                "slug" : {
+                  "type" : "string"
+                },
+                "items" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          },
+          "featured" : {
+            "type" : "boolean"
+          },
+          "order" : {
+            "type" : "number"
+          },
+          "icon" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "UserSummary" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          }
+        }
+      },
+      "UserProfile" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          },
+          "role" : {
+            "type" : "string"
+          },
+          "gender" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "Variant" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "size" : {
+            "type" : "string"
+          },
+          "color" : {
+            "type" : "string"
+          },
+          "stock" : {
+            "type" : "number"
+          },
+          "images" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "sku" : {
+            "type" : "string"
+          },
+          "stockZeroAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "Product" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "price" : {
+            "type" : "number"
+          },
+          "originalPrice" : {
+            "type" : "number"
+          },
+          "images" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "category" : {
+            "$ref" : "#/components/schemas/Category"
+          },
+          "categorySlug" : {
+            "type" : "string"
+          },
+          "subcategory" : {
+            "type" : "string"
+          },
+          "sizes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "colors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "stock" : {
+            "type" : "number"
+          },
+          "hasVariants" : {
+            "type" : "boolean"
+          },
+          "variants" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Variant"
+            }
+          },
+          "brand" : {
+            "type" : "string"
+          },
+          "rating" : {
+            "type" : "number"
+          },
+          "proveedor" : {
+            "type" : "string"
+          },
+          "importe" : {
+            "type" : "number"
+          },
+          "taxes" : {
+            "type" : "number"
+          },
+          "impuestosImportacion" : {
+            "type" : "number"
+          },
+          "flete" : {
+            "type" : "number"
+          },
+          "costo" : {
+            "type" : "number"
+          },
+          "paraTienda" : {
+            "type" : "boolean"
+          },
+          "location" : {
+            "type" : "string"
+          },
+          "barcode" : {
+            "type" : "string"
+          },
+          "totalStock" : {
+            "type" : "number"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "ProductCreate" : {
+        "type" : "object",
+        "required" : [ "name", "description", "price", "images", "category" ],
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "price" : {
+            "type" : "number"
+          },
+          "originalPrice" : {
+            "type" : "number"
+          },
+          "images" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "category" : {
+            "type" : "string"
+          },
+          "subcategory" : {
+            "type" : "string"
+          },
+          "sizes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "colors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "stock" : {
+            "type" : "number"
+          },
+          "variants" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Variant"
+            }
+          },
+          "hasVariants" : {
+            "type" : "boolean"
+          },
+          "barcode" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProductUpdate" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "price" : {
+            "type" : "number"
+          },
+          "images" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "category" : {
+            "type" : "string"
+          },
+          "sizes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "colors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "stock" : {
+            "type" : "number"
+          },
+          "variants" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Variant"
+            }
+          },
+          "hasVariants" : {
+            "type" : "boolean"
+          },
+          "generateBarcode" : {
+            "type" : "boolean"
+          },
+          "barcode" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Notification" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "low_stock", "pickup_ready", "payment_failed", "info", "system_alert" ]
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "metadata" : {
+            "type" : "object"
+          },
+          "isRead" : {
+            "type" : "boolean"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "OrderItem" : {
+        "type" : "object",
+        "properties" : {
+          "product" : {
+            "oneOf" : [ {
+              "type" : "string"
+            }, {
+              "$ref" : "#/components/schemas/Product"
+            } ]
+          },
+          "price" : {
+            "type" : "number"
+          },
+          "quantity" : {
+            "type" : "integer"
+          },
+          "size" : {
+            "type" : "string"
+          },
+          "color" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Order" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "orderNumber" : {
+            "type" : "string"
+          },
+          "customer" : {
+            "type" : "object",
+            "properties" : {
+              "fullName" : {
+                "type" : "string"
+              },
+              "email" : {
+                "type" : "string"
+              },
+              "phone" : {
+                "type" : "string"
+              },
+              "address" : {
+                "type" : "string"
+              },
+              "reference" : {
+                "type" : "string"
+              },
+              "additionalInstructions" : {
+                "type" : "string"
+              },
+              "location" : {
+                "type" : "object",
+                "properties" : {
+                  "lat" : {
+                    "type" : "number"
+                  },
+                  "lng" : {
+                    "type" : "number"
+                  },
+                  "geocodedAddress" : {
+                    "type" : "string"
+                  },
+                  "mapScreenshot" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/OrderItem"
+            }
+          },
+          "subtotal" : {
+            "type" : "number"
+          },
+          "shippingCost" : {
+            "type" : "number"
+          },
+          "total" : {
+            "type" : "number"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "pending", "processing", "shipped", "delivered", "cancelled" ]
+          },
+          "user" : {
+            "type" : "string"
+          },
+          "deliveryMethod" : {
+            "type" : "string",
+            "enum" : [ "delivery", "pickup", "pos" ]
+          },
+          "pickupDetails" : {
+            "type" : "object",
+            "properties" : {
+              "date" : {
+                "type" : "string"
+              },
+              "time" : {
+                "type" : "string"
+              }
+            }
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "OrderCreate" : {
+        "type" : "object",
+        "required" : [ "items", "customer" ],
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/OrderItem"
+            }
+          },
+          "customer" : {
+            "type" : "object",
+            "required" : [ "fullName", "email", "phone", "address" ],
+            "properties" : {
+              "fullName" : {
+                "type" : "string"
+              },
+              "email" : {
+                "type" : "string"
+              },
+              "phone" : {
+                "type" : "string"
+              },
+              "address" : {
+                "type" : "string"
+              },
+              "reference" : {
+                "type" : "string"
+              },
+              "additionalInstructions" : {
+                "type" : "string"
+              },
+              "location" : {
+                "type" : "object",
+                "properties" : {
+                  "lat" : {
+                    "type" : "number"
+                  },
+                  "lng" : {
+                    "type" : "number"
+                  },
+                  "geocodedAddress" : {
+                    "type" : "string"
+                  },
+                  "mapScreenshot" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          },
+          "subtotal" : {
+            "type" : "number"
+          },
+          "shippingCost" : {
+            "type" : "number"
+          },
+          "total" : {
+            "type" : "number"
+          },
+          "deliveryMethod" : {
+            "type" : "string",
+            "enum" : [ "delivery", "pickup", "pos" ]
+          },
+          "pickupDetails" : {
+            "type" : "object",
+            "properties" : {
+              "date" : {
+                "type" : "string"
+              },
+              "time" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      },
+      "StoreHours" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "day" : {
+            "type" : "integer",
+            "minimum" : 0,
+            "maximum" : 6
+          },
+          "openTime" : {
+            "type" : "string",
+            "example" : "07:00"
+          },
+          "closeTime" : {
+            "type" : "string",
+            "example" : "19:00"
+          },
+          "closed" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "ClosureDate" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "date" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "reason" : {
+            "type" : "string"
+          },
+          "hasSpecialHours" : {
+            "type" : "boolean"
+          },
+          "specialHours" : {
+            "type" : "object",
+            "properties" : {
+              "openTime" : {
+                "type" : "string"
+              },
+              "closeTime" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      },
+      "ClosureDateCreate" : {
+        "type" : "object",
+        "required" : [ "date" ],
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "reason" : {
+            "type" : "string"
+          },
+          "hasSpecialHours" : {
+            "type" : "boolean"
+          },
+          "specialHours" : {
+            "type" : "object",
+            "properties" : {
+              "openTime" : {
+                "type" : "string"
+              },
+              "closeTime" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      },
+      "CustomFont" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "url" : {
+            "type" : "string"
+          },
+          "public_id" : {
+            "type" : "string"
+          },
+          "format" : {
+            "type" : "string"
+          },
+          "originalName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Setting" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "any"
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      }
+    }
+  },
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/ivantech/backend-API/1.0"
+  }, {
+    "url" : "http://localhost:4000",
+    "description" : "Local dev"
+  } ],
+  "security" : [ {
+    "apiKey_1" : [ ]
+  } ]
+}
